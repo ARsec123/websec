@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XS-Search Attack Simulation</title>
+    <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function search() {
+            var keyword = document.getElementById("keyword").value;
+            var Keywords = ['hello', 'ciao', 'Building', 'are', 'cool', 'IBAN:DE123456789012123456'];
+            var MatchingStrings = [];
+            var startTime = performance.now(); // Start the timer
+
+            for (let i = 0; i < Keywords.length; i++) {
+                var matchedChars = "";
+                var prevMatchedChar = "";
+                for (let j = 0; j < Keywords[i].length; j++) {
+                    if (j == 0 || prevMatchedChar === true ) {
+                        if (keyword[j] === Keywords[i][j]) {
+                            await sleep(100); // Sleep for 100 milliseconds (0.1 seconds)
+                            matchedChars += keyword[j];
+                            prevMatchedChar = true
+                        }
+                        else {
+                            prevMatchedChar = false
+                        }
+                    }
+                }
+                MatchingStrings.push(matchedChars);
+
+                if (MatchingStrings.length > 0) {
+                    var matched = "";
+                    for (let i = 0; i < MatchingStrings.length; i++) {
+                        matched += (i + 1) + ". " + MatchingStrings[i] + '<br>';
+                    }
+                    document.getElementById('result').innerHTML = "Keyword found in: <br>" + matched;
+                } else {
+                    document.getElementById('result').innerHTML = "Keyword not found.";
+            }
+            }
+            
+            var endTime = performance.now(); // Stop the timer
+            var timeTaken = endTime - startTime;
+
+            console.log("Time taken (ms): ", timeTaken);
+        }
+    </script>
+</head>
+<body>
+    <h1>XS-Search Attack Simulation</h1>
+    <p>Enter a keyword to search:</p>
+    <input type="text" id="keyword" name="keyword">
+    <button onclick="search()">Search</button>
+    <p id="result"></p>
+</body>
+</html>
